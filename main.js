@@ -15,20 +15,19 @@ if( !args.length ){
 }
 
 each(args, ( f, callback ) => {
-
   let resolved = resolve(f)
   lstat(resolved, ( err, stat ) => {
   
     let splitten = resolved.split('/')
     let file = splitten.pop()
     if( stat && SPACE_REGEX.test(file) ){
-      rename(resolved, join(splitten.join('/'), file.replace(SPACE_REGEX, '')), callback)
+      rename(resolved, join(splitten.join('/'), file.replace(SPACE_REGEX, '_')), callback)
     }else{
       callback( null )
     }
   })
 }, ( err ) => {
-    if( err ){
-      console.log('Error', err)
-    }
+  if( err ){
+    console.log('Error', err)
+  }
 })
