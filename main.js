@@ -5,16 +5,32 @@
 const { each } = require('async')
 const { resolve, join } = require('path')
 const { lstat, rename} = require('fs')
-
 const SPACE_REGEX = /( )+/gi
-const args = Array.from(process.argv).slice(2)
 
-if( !args.length ){
-  console.log(`Usage ${process.argv[0]} ${process.argv[1]} <files> (glob expansion allowed)`)
-  process.exit(1)
-}
+const ArgumentParser = require('argparse').ArgumentParser
+const parser = new ArgumentParser({
+  version: require('./package.json').version,
+  addHelp: true
+})
 
-each(args, ( f, callback ) => {
+parser.addArgument(
+  'files',
+  {
+    help: 'Files to replace space (glob expansion allowed)',
+    nargs: '+'
+  }
+)
+parser.addArgument(
+  ['-r', '--replace'],
+  {
+    help: 'Replace space with this char (default is to remove whitespace)',
+    defaultValue: ''
+  }
+)
+
+const args = parser.parseArgs()
+
+each(args.files, ( f, callback ) => {
 
   let resolved = resolve(f)
   lstat(resolved, ( err, stat ) => {
@@ -22,7 +38,7 @@ each(args, ( f, callback ) => {
     let splitten = resolved.split('/')
     let file = splitten.pop()
     if( stat && SPACE_REGEX.test(file) ){
-      rename(resolved, join(splitten.join('/'), file.replace(SPACE_REGEX, '')), callback)
+      rename(resolved, join(splitten.join('/'), file.replace(SPACE_REGEX, args.replace)), callback)
     }else{
       callback( null )
     }
