@@ -44,7 +44,7 @@ each(args.files, ( f, callback ) => {
     }
   })
 }, ( err ) => {
-    if( err ){
-      console.log('Error', err)
-    }
+  if( err ){
+    console.log('Error', err)
+  }
 })
