@@ -10,7 +10,7 @@
   "author": "gb",
   "license": "UNLICENSED",
   "dependencies": {
-    "async": "^2.1.5",
+    "async": "^2.6.4",
     "argparse": "*"
   }
 }
